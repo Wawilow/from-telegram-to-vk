@@ -17,7 +17,11 @@ def one_day_plus_time(data, delta=1):#в дату можно 1)дататам н
                     data = datetime.date(data[0], data[1], data[2])
                     return data + delta
                 elif len(data) == 5:
-                    data = datetime.date(data[0], data[1], data[2], data[3], data[4])
+                    #data = datetime.date(data[0], data[1], data[2], data[3], data[4])
+                    #старая код, не рабачий
+                    data = datetime.datetime(data[0], data[1], data[2], data[3], data[4], 0, 0)
+                    #datetime.datetime(2011, 11, 4, 0, 5, 23, 283000)
+                    #>> > datetime.fromisoformat('2011-11-04 00:05:23.283+00:00')
                     return data + delta
             except:
                 return ('error list ==> date convert')
@@ -25,8 +29,11 @@ def one_day_plus_time(data, delta=1):#в дату можно 1)дататам н
 
 
 def unixtime_convert(date): #превращает обычную дата тайм дату в юникс дату
-    unixtime = time.mktime(date.timetuple())
-    return unixtime
+    try:
+        unixtime = time.mktime(date.timetuple())
+        return unixtime
+    except:
+        return 'error unitime convert'
 
 
 def for_vk_post_convert(): #превращает нынешнюю дату в дату+1 день в формате unixtime
@@ -34,4 +41,7 @@ def for_vk_post_convert(): #превращает нынешнюю дату в д
 
 
 if __name__ == '__main__':
-    print(unixtime_convert(one_day_plus_time(datetime.datetime.now())))
+    pass
+    # задаем дату и время сейчас, в функцию прибавления 1 дня(можно задать дельту измения)
+    # и полученную дату закидываем в преоброзователь из обычной даты\времени в unitime
+    #print(unixtime_convert(one_day_plus_time(datetime.datetime.now())))

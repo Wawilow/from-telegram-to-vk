@@ -4,14 +4,15 @@
 #6750236
 
 
-import telethon
 from telethon import TelegramClient, events, sync
-from telethon.tl.functions.messages import GetHistoryRequest
+
+from icecream import ic
+
 
 api_id = '6750236'
 api_hash = '05bb4b22b3f9099fb80a672d3402bba7'
 chanel_id = '-1001349895158'
-user_input_channel = 'https://t.me/neural_pushkin'
+user_channel = 'https://t.me/neural_pushkin'
 
 
 def client_connect():
@@ -27,13 +28,28 @@ def client_connect():
     return client
 
 
+def all_post_telegram(limit=1):
+    client = TelegramClient('session_name', api_id, api_hash)
+    client.start()
+    messages = client.get_messages(user_channel, limit=limit)
+    message = []
+    for i in messages:
+        app_end = {'id': i.id, 'datatime': i.date, 'message': i.message}
+        message.append(app_end)
+    print(message)
+    return message
+
 def main():
     client = TelegramClient('session_name', api_id, api_hash)
     client.start()
-    messages = client.get_messages(chanel_id, limit=10)
-    print(messages)
-    print(type(messages))
+    messages = client.get_messages(user_channel, limit=100)
+    for message in messages:
+        print(message)
+        print()
+        print(message.message)
+        print()
 
 
 if __name__ == '__main__':
     main()
+    # print(all_post_telegram(limit=10))

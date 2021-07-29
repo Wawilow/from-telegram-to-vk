@@ -1,7 +1,6 @@
 from all_telegram_post import all_post_telegram
 from icecream import ic
 import vk_api
-from  new_post import time_to_post2
 from last_vk_post import text_posts
 from difflib import SequenceMatcher
 

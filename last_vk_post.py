@@ -2,6 +2,8 @@ import vk_api
 from datetime import datetime
 from time_convert import data_time_convert
 
+import icecream
+
 
 def all_postponed_post(VK, groupId):
     params = {"owner_id": f'-{groupId}', "count": f'100', "filter": f'postponed'}
@@ -18,10 +20,11 @@ def text_posts(VK, groupId, how_many=10):
 
 def last_post(VK, groupId):
     params = {"owner_id": f'-{groupId}', "count": f'100'}
-    time_post = int(f"{VK.wall.get(**params)['items'][-1]['date']}")
+    time_post = int(f"{VK.wall.get(**params)['items'][0]['date']}")
     time_post = datetime.utcfromtimestamp(time_post).strftime('%Y-%m-%d %H:%M:%S')
     time_post = [*time_post.split(' ')[0].split('-'), *time_post.split(' ')[1].split(':')]
     time_post = data_time_convert(time_post, delta_hours=3)
+    # icecream.ic(VK.wall.get(**params)['items'][0])
     return time_post
 
 

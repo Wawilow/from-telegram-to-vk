@@ -50,4 +50,3 @@ if __name__ == '__main__':
             ic(new_texts_post(VK, groupId, tg_text,
                               data=unixtime_convert(time_to_post(VK, groupId,
                                                                  last_time=(last_postponed_post(VK, groupId))))))
-write bad

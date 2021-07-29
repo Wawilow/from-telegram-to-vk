@@ -10,12 +10,30 @@ ic.configureOutput(includeContext=True)
 
 
 
-def same_text_or_not(text_one, text_two):
-    similarity = SequenceMatcher(None, ''.join(i[1]), ''.join(tg_text)).ratio()
-    if similarity >= 0.8:
+def same_text_or_not(text_one, text_two, similarity_kaf=0.8):
+    similarity = SequenceMatcher(None, text_one, text_two).ratio()
+    if similarity >= similarity_kaf:
         return True
     else:
         return False
+
+
+def have_this_post_in_vk(VK, groupId, telegram_text, how_many=100):
+    global vk_texts
+    if vk_texts == []:
+        # pass
+        vk_texts = text_posts(VK, groupId, how_many=how_many)
+    text = [[i['id'], i['text']] for i in vk_texts['items']]
+    for i in text:
+        try:
+            same_text = same_text_or_not(''.join((i[1])), ''.join(telegram_text))
+        except:
+            print('i', i, type(i))
+            print('teleg', telegram_text, type(telegram_text))
+            same_text = False
+        if same_text:
+            return True
+    return False
 
 
 if __name__ == '__main__':
@@ -24,13 +42,8 @@ if __name__ == '__main__':
     vk_api = vk_api.VkApi(token=main_token)
     VK = vk_api.get_api()
     groupId = '204952505'
-
-    tg = all_post_telegram(limit=100)[0]
-    tg_text = tg['message']
-    text = text_posts(VK, groupId, how_many=100)
-    # ic(text['items'])
-    # ic((text['items']))
-    texts = [[i['id'], i['text']] for i in text['items']]
-    for i in texts:
-        diff = SequenceMatcher(None, ''.join(i[1]), ''.join(tg_text))
-        print(same_text_or_not(''.join((i[1])), ''.join(tg_text)))
+    vk_texts = []
+    for tg in all_post_telegram(limit=100):
+        tg_text = tg['message']
+        if have_this_post_in_vk(VK, groupId, tg_text):
+            print(True)

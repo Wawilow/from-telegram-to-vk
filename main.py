@@ -1,8 +1,10 @@
 from all_telegram_post import all_post_telegram
 from icecream import ic
 import vk_api
-from last_vk_post import text_posts
+from last_vk_post import text_posts, last_postponed_post
 from difflib import SequenceMatcher
+from new_post import new_texts_post, time_to_post
+from time_convert import unixtime_convert
 
 
 ic.configureOutput(includeContext=True)
@@ -42,7 +44,10 @@ if __name__ == '__main__':
     VK = vk_api.get_api()
     groupId = '204952505'
     vk_texts = []
-    for tg in all_post_telegram(limit=100):
+    for tg in all_post_telegram(limit=10)[::-1]:
         tg_text = tg['message']
-        if have_this_post_in_vk(VK, groupId, tg_text):
-            print(True)
+        if not have_this_post_in_vk(VK, groupId, tg_text):
+            ic(new_texts_post(VK, groupId, tg_text,
+                              data=unixtime_convert(time_to_post(VK, groupId,
+                                                                 last_time=(last_postponed_post(VK, groupId))))))
+write bad

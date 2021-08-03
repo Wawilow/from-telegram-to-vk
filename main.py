@@ -1,6 +1,6 @@
 from all_telegram_post import all_post_telegram
 from icecream import ic
-import vk_api
+from vk_api import VkApi
 from last_vk_post import text_posts, last_postponed_post
 from difflib import SequenceMatcher
 from new_post import new_texts_post, time_to_post
@@ -19,8 +19,7 @@ def same_text_or_not(text_one, text_two, similarity_kaf=0.8):
         return False
 
 
-def have_this_post_in_vk(VK, groupId, telegram_text, how_many=100):
-    global vk_texts
+def have_this_post_in_vk(VK, groupId, telegram_text, vk_texts, how_many=100):
     if vk_texts == []:
         # pass
         vk_texts = text_posts(VK, groupId, how_many=how_many)
@@ -37,16 +36,20 @@ def have_this_post_in_vk(VK, groupId, telegram_text, how_many=100):
     return False
 
 
-if __name__ == '__main__':
-    token = 'cb0400ae1b14d0875b4803640297401794c9d0984e0585a5521672c3f9aa60e88c856f5ce2248b640ef60'
-    main_token = 'ad135a8d6e65aa945e86f32aa44e9fd8f5ce4977a18a8b85a12ac9b3079c991c46699611ff17e7679bff6'
-    vk_api = vk_api.VkApi(token=main_token)
+def cross_posting_to_vk(main_token, groupId):
+    vk_api = VkApi(token=main_token)
     VK = vk_api.get_api()
-    groupId = '204952505'
     vk_texts = []
     for tg in all_post_telegram(limit=10)[::-1]:
         tg_text = tg['message']
-        if not have_this_post_in_vk(VK, groupId, tg_text):
+        if not have_this_post_in_vk(VK, groupId, tg_text, vk_texts):
             ic(new_texts_post(VK, groupId, tg_text,
                               data=unixtime_convert(time_to_post(VK, groupId,
                                                                  last_time=(last_postponed_post(VK, groupId))))))
+
+
+if __name__ == '__main__':
+    main_token = 'ad135a8d6e65aa945e86f32aa44e9fd8f5ce4977a18a8b85a12ac9b3079c991c46699611ff17e7679bff6'
+    groupId = '204952505'
+    cross_posting_to_vk(main_token=main_token,
+                        groupId=groupId)

@@ -49,7 +49,8 @@ def cross_posting_to_vk(main_token, groupId):
 
 
 if __name__ == '__main__':
-    main_token = 'ad135a8d6e65aa945e86f32aa44e9fd8f5ce4977a18a8b85a12ac9b3079c991c46699611ff17e7679bff6'
+    # отличный сайт для получения токена, вроде даже норм https://vkhost.github.io/
+    main_token = '7590a1ae275d8b38b843371b2d9c4b64b196df60e43284e50e246f984c22b0f2c3cfe21a159f450d286a2'
     groupId = '204952505'
     cross_posting_to_vk(main_token=main_token,
                         groupId=groupId)
